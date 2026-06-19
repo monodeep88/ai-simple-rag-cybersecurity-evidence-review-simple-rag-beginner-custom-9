@@ -1,0 +1,7 @@
+SECTION 4. DATA BREACH RESPONSE
+4.1. Incident Identification: Any employee identifying a potential data breach must immediately report it to the Security Operations Center (SOC) within 1 hour.
+4.2. Containment: The affected systems must be isolated from the network to prevent further spread.
+4.3. Eradication: Eliminate the root cause of the breach (e.g., remove malware, patch vulnerabilities, reset compromised credentials).
+4.4. Recovery: Restore affected systems and data from secure backups. Monitor closely for recurrence.
+4.5. Notification: In case of personal data compromise, affected individuals and relevant regulatory bodies must be notified within 72 hours of discovery, as per GDPR and local regulations. The legal team must be consulted prior to any external communication.
+4.6. Post-Incident Review: A thorough review will be conducted within 7 days to document lessons learned.
