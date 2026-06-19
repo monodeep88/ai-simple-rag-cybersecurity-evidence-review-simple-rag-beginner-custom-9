@@ -1,0 +1,133 @@
+{
+  "mode": "ai",
+  "project_title": "Cyber Evidence RAG Assistant",
+  "short_description": "A beginner-friendly Retrieval-Augmented Generation (RAG) system for querying and summarizing cybersecurity incident evidence documents. Users can upload various reports, logs, and policies, then ask natural language questions to extract key information and insights.",
+  "domain_summary": "Cybersecurity Evidence Review involves analyzing diverse digital artifacts (e.g., incident reports, log files, vulnerability scans, policy documents) to understand security incidents, assess compliance, or identify threats. This project simplifies that process by allowing a user to 'chat' with their evidence base, retrieving relevant sections and generating concise answers to specific questions, reducing manual document review time.",
+  "user_persona": "Junior Cybersecurity Analyst: A new analyst or security intern who needs to quickly get up to speed on an incident, understand a specific vulnerability, or find information within a large set of incident-related documents without having to manually read through every file.",
+  "architecture_notes": [
+    "This architecture prioritizes simplicity and local deployability for a beginner RAG project. The React frontend provides an intuitive chat interface. The FastAPI backend orchestrates document ingestion, chunking, embedding, vector storage in ChromaDB, and the RAG query process. ChromaDB is chosen for its ease of setup as an embedded database. A local Sentence Transformer model handles document chunk embeddings, avoiding external API costs for this critical step. For text generation, a simple local LLM or a mock API is specified to ensure the project is fully runnable without requiring external API keys. This setup provides practical experience with core RAG components in a self-contained environment, making it ideal for portfolio demonstration."
+  ],
+  "backend_modules": [
+    "Document Ingestion: Receives a document file, processes it (text extraction, chunking), generates embeddings, and stores chunks in ChromaDB.",
+    "RAG Query: Takes a user query, embeds it, retrieves top-k relevant document chunks from ChromaDB, constructs a prompt, and sends it to the LLM for a generative answer.",
+    "Document Listing: Returns a list of all currently ingested documents in the system."
+  ],
+  "frontend_features": [
+    "Document Upload Interface: Drag-and-drop or file selection for uploading cybersecurity evidence documents (TXT, PDF support via library).",
+    "Chatbot UI: Interactive chat interface for users to type questions and receive AI-generated answers based on the uploaded documents.",
+    "Uploaded Document List: Displays a list of all documents that have been successfully ingested into the RAG system.",
+    "Loading Indicators: Visual feedback during document processing and AI response generation."
+  ],
+  "data_sources": [
+    "Internal cybersecurity reports (e.g., incident reports, vulnerability assessments), network log excerpts, security policy documents, threat intelligence bulletins, compliance checklists. All data is user-uploaded."
+  ],
+  "testing_strategy": [
+    "{'unit_tests': 'Test individual functions like text chunking, embedding generation, ChromaDB insertion, and prompt construction.', 'integration_tests': 'Test interaction between backend modules, e.g., document upload followed by a query to ensure data flow and RAG pipeline integrity.', 'end_to_end_tests': 'Simulate user interaction from frontend (uploading a document, asking a question) to verify the full system functionality and response accuracy. Mock LLM responses for predictable outcomes.', 'performance_tests': 'Basic checks for response times on queries with a moderate number of documents.'}"
+  ],
+  "starter_questions": [
+    "What was the root cause identified in the incident report?",
+    "List all affected systems mentioned in the network logs.",
+    "What steps are required for data breach notification according to the 'Incident Response Policy.pdf'?",
+    "Are there any indicators of compromise (IOCs) listed in the latest threat intelligence report?",
+    "Summarize the findings of the vulnerability scan for server 'SRV-WEB-01'."
+  ],
+  "workflow_steps": [
+    "**1. Document Preparation:** User gathers cybersecurity evidence documents (e.g., incident reports, log files, policy docs).",
+    "**2. Document Upload:** User navigates to the web UI and uploads one or more documents via the designated upload area.",
+    "**3. Ingestion & Embedding:** The backend service receives the document, extracts text, splits it into smaller chunks, generates vector embeddings for each chunk, and stores these embeddings along with their original text in ChromaDB.",
+    "**4. Document Listing:** The uploaded document appears in the 'Uploaded Documents' list on the UI, confirming successful ingestion.",
+    "**5. Query Formulation:** User types a natural language question into the chat interface related to the uploaded documents (e.g., 'What was the timeline of the attack?').",
+    "**6. Retrieval:** The backend embeds the user's query and performs a similarity search in ChromaDB to retrieve the most relevant document chunks.",
+    "**7. Context Augmentation:** The retrieved chunks are combined with the user's original query into a coherent prompt for the LLM.",
+    "**8. Generation:** The LLM processes the augmented prompt and generates a concise, relevant answer based solely on the provided context."
+  ],
+  "business_rules": [
+    "Documents must be less than 10MB to ensure efficient processing for a beginner setup.",
+    "Only text-based documents (or those convertible to text like PDF) are supported.",
+    "Document chunks must have a minimum length to ensure semantic meaning (e.g., 50 characters).",
+    "The RAG system must only answer questions based on the content of the uploaded documents; no external knowledge.",
+    "The system should prioritize factual extraction and summarization over creative generation.",
+    "Maximum of 5 relevant chunks will be retrieved for context augmentation to manage LLM token limits.",
+    "A clear error message must be displayed if no relevant information is found for a query."
+  ],
+  "sample_documents": [
+    {
+      "filename": "incident_report_IR2023-001.txt",
+      "content": "Incident Report ID: IR2023-001\nDate: 2023-10-26\nTime Detected: 09:30 AM UTC\nDescription: Unauthorized access detected on financial database server 'DB-FIN-01'. An anomaly in login patterns was observed for user 'jdoe'.\nSeverity: High\nStatus: Contained\nRoot Cause: Weak password for 'jdoe' account, likely exploited via phishing.\nAffected Systems: DB-FIN-01 (IP: 192.168.1.100), WEB-APP-03 (IP: 10.0.0.50).\nActions Taken: Account 'jdoe' password reset, server DB-FIN-01 isolated, phishing email campaign identified and blocked. Data integrity check initiated on affected databases.\nFurther Steps: Mandate company-wide MFA, conduct security awareness training on phishing. Implement stronger password policies."
+    },
+    {
+      "filename": "network_log_excerpt_2023-10-26.txt",
+      "content": "Oct 26 09:28:15 firewall-a BLOCK IN=eth0 OUT= MAC=... SRC=203.0.113.4 DST=192.168.1.100 LEN=40 TOS=0x00 PREC=0x00 TTL=245 ID=12345 PROTO=TCP SPT=54321 DPT=3306 WINDOW=29200 RES=0x00 SYN URGP=0\nOct 26 09:28:16 firewall-a ALLOW IN=eth1 OUT=eth2 MAC=... SRC=10.0.0.50 DST=192.168.1.100 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=54321 PROTO=TCP SPT=45000 DPT=3306 WINDOW=1460 RES=0x00 SYN ACK\nOct 26 09:29:01 snort-alert [1:2001718:8] ET INFO Possible Inbound Shellcode Payload [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} 203.0.113.4:54321 -> 192.168.1.100:3306\nOct 26 09:29:05 auth.log sshd[12345]: Accepted password for jdoe from 203.0.113.4 port 54321 ssh2\nOct 26 09:30:10 auth.log sshd[12346]: Connection closed by jdoe from 203.0.113.4 port 54321 [preauth]"
+    },
+    {
+      "filename": "security_policy_v1.2.pdf",
+      "content": "SECTION 4. DATA BREACH RESPONSE\n4.1. Incident Identification: Any employee identifying a potential data breach must immediately report it to the Security Operations Center (SOC) within 1 hour.\n4.2. Containment: The affected systems must be isolated from the network to prevent further spread.\n4.3. Eradication: Eliminate the root cause of the breach (e.g., remove malware, patch vulnerabilities, reset compromised credentials).\n4.4. Recovery: Restore affected systems and data from secure backups. Monitor closely for recurrence.\n4.5. Notification: In case of personal data compromise, affected individuals and relevant regulatory bodies must be notified within 72 hours of discovery, as per GDPR and local regulations. The legal team must be consulted prior to any external communication.\n4.6. Post-Incident Review: A thorough review will be conducted within 7 days to document lessons learned."
+    }
+  ],
+  "tool_catalog": [
+    {
+      "name": "VectorStoreSearch",
+      "description": "Searches the ChromaDB vector store for document chunks semantically similar to the user's query and retrieves their original text content. This is the primary tool for fetching relevant context."
+    },
+    {
+      "name": "DocumentEmbedder",
+      "description": "Generates numerical vector representations (embeddings) for text segments using a pre-trained Sentence Transformer model."
+    },
+    {
+      "name": "TextChunker",
+      "description": "Splits long text documents into smaller, manageable chunks suitable for embedding and LLM context windows, while maintaining some contextual overlap."
+    }
+  ],
+  "agent_plan": [
+    {
+      "name": "Receive User Query",
+      "role": "Define app boundaries, data flow, runtime stack, and integration points.",
+      "outputs": []
+    },
+    {
+      "name": "Embed Query",
+      "role": "Design FastAPI modules, service contracts, validation, and error handling.",
+      "outputs": []
+    },
+    {
+      "name": "Retrieve Relevant Context",
+      "role": "Design React screens, state flow, controls, and user feedback states.",
+      "outputs": []
+    },
+    {
+      "name": "Construct LLM Prompt",
+      "role": "Design persistence models, sample data, indexes, and audit records.",
+      "outputs": []
+    },
+    {
+      "name": "Generate Answer",
+      "role": "Define contract tests, smoke tests, and generated project validation.",
+      "outputs": []
+    },
+    {
+      "name": "Return Answer",
+      "role": "Define environment variables, Docker workflow, and repository packaging.",
+      "outputs": []
+    }
+  ],
+  "model_provider": "gemini",
+  "model_name": "gemini-2.5-flash",
+  "fallback_reason": "OpenAI limit reached. Automatically switched to Gemini.",
+  "architecture": "PDF FAQ Knowledge Bot",
+  "architecture_template_id": 2,
+  "architecture_template_path": "templates/simple-rag/pdf-faq-knowledge-bot",
+  "architecture_description": "PDF FAQ Knowledge Bot for answering repeat questions from uploaded documents.",
+  "architecture_version": "1.0",
+  "architecture_origin": "built_in",
+  "architecture_quality_score": 100,
+  "architecture_evolution_notes": "",
+  "architecture_technology": null,
+  "architecture_source_version": null,
+  "validation_pipeline": [
+    "pytest",
+    "npm install",
+    "npm run build",
+    "docker compose config",
+    "docker compose build"
+  ]
+}
