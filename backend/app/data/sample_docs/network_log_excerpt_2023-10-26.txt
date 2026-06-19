@@ -1,0 +1,5 @@
+Oct 26 09:28:15 firewall-a BLOCK IN=eth0 OUT= MAC=... SRC=203.0.113.4 DST=192.168.1.100 LEN=40 TOS=0x00 PREC=0x00 TTL=245 ID=12345 PROTO=TCP SPT=54321 DPT=3306 WINDOW=29200 RES=0x00 SYN URGP=0
+Oct 26 09:28:16 firewall-a ALLOW IN=eth1 OUT=eth2 MAC=... SRC=10.0.0.50 DST=192.168.1.100 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=54321 PROTO=TCP SPT=45000 DPT=3306 WINDOW=1460 RES=0x00 SYN ACK
+Oct 26 09:29:01 snort-alert [1:2001718:8] ET INFO Possible Inbound Shellcode Payload [Classification: Potentially Bad Traffic] [Priority: 2] {TCP} 203.0.113.4:54321 -> 192.168.1.100:3306
+Oct 26 09:29:05 auth.log sshd[12345]: Accepted password for jdoe from 203.0.113.4 port 54321 ssh2
+Oct 26 09:30:10 auth.log sshd[12346]: Connection closed by jdoe from 203.0.113.4 port 54321 [preauth]
