@@ -1,0 +1,10 @@
+Incident Report ID: IR2023-001
+Date: 2023-10-26
+Time Detected: 09:30 AM UTC
+Description: Unauthorized access detected on financial database server 'DB-FIN-01'. An anomaly in login patterns was observed for user 'jdoe'.
+Severity: High
+Status: Contained
+Root Cause: Weak password for 'jdoe' account, likely exploited via phishing.
+Affected Systems: DB-FIN-01 (IP: 192.168.1.100), WEB-APP-03 (IP: 10.0.0.50).
+Actions Taken: Account 'jdoe' password reset, server DB-FIN-01 isolated, phishing email campaign identified and blocked. Data integrity check initiated on affected databases.
+Further Steps: Mandate company-wide MFA, conduct security awareness training on phishing. Implement stronger password policies.
